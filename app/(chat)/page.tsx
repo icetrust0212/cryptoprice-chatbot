@@ -53,14 +53,14 @@ export default function Page() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sticky top-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-3 animate-pulse"></span>
+                <span className="size-2 bg-green-500 rounded-full mr-3 animate-pulse"></span>
                 Quick Price Check
               </h2>
               
               <div className="space-y-4">
                 <div className="relative">
                   <input
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder:text-gray-400"
                     placeholder="e.g. BTC, ETH, SOL"
                     value={symbol}
                     onChange={(e) => setSymbol(e.target.value)}
@@ -72,7 +72,7 @@ export default function Page() {
                     disabled={isLoading}
                   />
                   <button
-                    className={`absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    className={`absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                       isLoading || !symbol.trim()
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         : 'bg-blue-600 hover:bg-blue-700 text-white hover:scale-105'
@@ -81,7 +81,7 @@ export default function Page() {
                     disabled={isLoading || !symbol.trim()}
                   >
                     {isLoading ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <div className="size-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     ) : (
                       'Check'
                     )}
