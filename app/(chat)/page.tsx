@@ -37,7 +37,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="mx-auto max-w-4xl p-6">
+      <div className="mx-auto max-w-4xl p-6 lg:pt-28 ">
         {/* Header */}
         <header className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
