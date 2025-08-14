@@ -122,7 +122,7 @@ export default function Page() {
               {/* Chat Header */}
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4">
                 <h3 className="text-white font-semibold flex items-center">
-                  <span className="w-2 h-2 bg-white rounded-full mr-3"></span>
+                  <span className="size-2 bg-white rounded-full mr-3"></span>
                   AI Assistant
                 </h3>
               </div>
@@ -131,7 +131,7 @@ export default function Page() {
               <div className="h-96 overflow-y-auto p-6 space-y-4 scroll-smooth">
                 {messages.length === 0 ? (
                   <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="size-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <span className="text-2xl">💬</span>
                     </div>
                     <h3 className="text-lg font-medium text-gray-800 mb-2">Start a conversation</h3>
@@ -163,9 +163,9 @@ export default function Page() {
 
                 {isLoading && (
                   <div className="flex items-center space-x-2 text-gray-500">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="size-2 bg-blue-500 rounded-full animate-bounce"></div>
+                    <div className="size-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="size-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     <span className="text-sm">AI is thinking...</span>
                   </div>
                 )}
@@ -178,7 +178,7 @@ export default function Page() {
               <div className="border-t border-gray-100 p-4">
                 <div className="flex space-x-3">
                   <input
-                    className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                    className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder:text-gray-400"
                     placeholder="Ask about crypto prices... e.g. 'What's the price of Bitcoin?'"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
@@ -200,7 +200,7 @@ export default function Page() {
                     disabled={isLoading || !input.trim()}
                   >
                     {isLoading ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <div className="size-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     ) : (
                       'Send'
                     )}
