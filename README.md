@@ -1,62 +1,216 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chat SDK</h1>
-</a>
+# AI Crypto Price Chatbot
 
-<p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
-</p>
+A sophisticated AI-powered cryptocurrency price chatbot built with Next.js 15 and the Vercel AI SDK. This application demonstrates advanced LLM tool integration for real-time cryptocurrency price fetching from Binance API.
 
-<p align="center">
-  <a href="https://chat-sdk.dev"><strong>Read Docs</strong></a> ·
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
-</p>
-<br/>
+## 🚀 Features
 
-## Features
+### **Core AI Integration**
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://sdk.vercel.ai/docs)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports xAI (default), OpenAI, Fireworks, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+- **LLM Tool Calling**: Seamless integration with AI models for intelligent price queries
+- **Real-time Streaming**: Live cryptocurrency price updates with streaming responses
+- **Smart Symbol Recognition**: Automatic symbol normalization (BTC → BTCUSDT)
+- **Multi-API Fallback**: Robust Binance API integration with multiple endpoint fallbacks
 
-## Model Providers
+### **Cryptocurrency Price Features**
 
-This template ships with [xAI](https://x.ai) `grok-2-1212` as the default chat model. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
+- **Live Price Fetching**: Real-time prices from Binance Spot API
+- **Multiple Quote Assets**: Support for USDT, USDC, BTC, ETH, and more
+- **Rich Price Data**: Complete trading pair information with base/quote detection
+- **Error Handling**: Comprehensive error handling for invalid symbols and API failures
 
-## Deploy Your Own
+### **Technical Stack**
 
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
+- **Next.js 15** with App Router and React Server Components
+- **Vercel AI SDK** for unified LLM interactions and tool calling
+- **OpenAI GPT-4o-mini** for intelligent price queries and responses
+- **TypeScript** for type safety and better development experience
+- **Tailwind CSS** for modern, responsive UI
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot&env=AUTH_SECRET&envDescription=Learn+more+about+how+to+get+the+API+Keys+for+the+application&envLink=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot%2Fblob%2Fmain%2F.env.example&demo-title=AI+Chatbot&demo-description=An+Open-Source+AI+Chatbot+Template+Built+With+Next.js+and+the+AI+SDK+by+Vercel.&demo-url=https%3A%2F%2Fchat.vercel.ai&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22ai%22%2C%22productSlug%22%3A%22grok%22%2C%22integrationSlug%22%3A%22xai%22%7D%2C%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22neon%22%2C%22integrationSlug%22%3A%22neon%22%7D%2C%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22upstash-kv%22%2C%22integrationSlug%22%3A%22upstash%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
+## 🛠️ LLM Tool Integration
 
-## Running locally
+This project demonstrates advanced LLM tool calling capabilities:
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+### **Crypto Price Tool**
 
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
-
-```bash
-pnpm install
-pnpm dev
+```typescript
+export const getCryptoPrice = tool({
+  description: "Get current spot price for a Binance trading pair",
+  inputSchema: z.object({
+    symbol: z
+      .string()
+      .min(2)
+      .describe("Crypto symbol or pair, e.g. BTC or BTCUSDT"),
+  }),
+  execute: async ({ symbol }, { abortSignal }) => {
+    // Real-time price fetching with error handling
+  },
+});
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000).
+### **AI Integration**
+
+The chatbot uses the AI SDK's `streamText` function with tool calling:
+
+```typescript
+const result = streamText({
+  model: openai("gpt-4o-mini"),
+  system:
+    "You are a crypto price helper. When users mention a symbol like BTC or BTCUSDT, call getCryptoPrice and then summarize briefly.",
+  messages: convertToModelMessages(messages),
+  tools: { getCryptoPrice },
+  stopWhen: stepCountIs(4),
+});
+```
+
+## 🏃‍♂️ Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm (recommended) or npm
+- OpenAI API key
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <your-repo-url>
+   cd ai-chatbot
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env.local` file:
+
+   ```env
+   OPENAI_API_KEY=your_openai_api_key_here
+   ```
+
+4. **Run the development server**
+
+   ```bash
+   pnpm dev
+   ```
+
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 💬 How to Use
+
+### **Quick Price Check**
+
+1. Enter a cryptocurrency symbol (e.g., `BTC`, `ETH`, `SOL`)
+2. Press Enter or click "Get Price"
+3. View real-time price information
+
+### **Natural Language Queries**
+
+- "What's the price of Bitcoin?"
+- "Show me ETH price"
+- "How much is SOL worth?"
+
+### **Supported Formats**
+
+- **Base symbols**: `BTC`, `ETH`, `SOL` (defaults to USDT)
+- **Full pairs**: `BTCUSDT`, `ETHBTC`, `SOLUSDC`
+- **Natural language**: "price of Bitcoin", "ETH value"
+
+## 🏗️ Architecture
+
+### **Frontend Components**
+
+- `app/(chat)/page.tsx` - Main chat interface
+- `components/chat.tsx` - Chat component with AI integration
+- `components/message.tsx` - Message display component
+
+### **Backend API**
+
+- `app/(chat)/api/chat/crypto-price/route.ts` - Crypto price chat endpoint
+- `lib/tools/crypto.ts` - Binance API integration tool
+
+### **LLM Integration**
+
+- Uses OpenAI GPT-4o-mini for intelligent responses
+- Implements tool calling for real-time price fetching
+- Streams responses for better user experience
+
+## 🔧 API Integration
+
+### **Binance API Features**
+
+- **Multiple endpoints** for reliability
+- **Automatic fallback** if primary endpoint fails
+- **Real-time data** with no caching
+- **Comprehensive error handling**
+
+### **Supported Quote Assets**
+
+- USDT, USDC, FDUSD, TUSD, BUSD
+- BTC, ETH, BNB
+- EUR, TRY, BRL
+
+## 🧪 Error Handling
+
+The application includes robust error handling:
+
+- **Invalid symbols**: Clear error messages for unsupported pairs
+- **API failures**: Automatic retry with multiple endpoints
+- **Network issues**: Graceful degradation with user feedback
+- **Rate limiting**: Proper handling of API limits
+
+## 📊 Response Format
+
+The crypto price tool returns rich, structured data:
+
+```json
+{
+  "symbol": "BTCUSDT",
+  "base": "BTC",
+  "quote": "USDT",
+  "price": 60000.0,
+  "asOfISO": "2024-01-15T10:30:00.000Z",
+  "source": "binance-spot"
+}
+```
+
+## 🚀 Deployment
+
+### **Vercel (Recommended)**
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add your `OPENAI_API_KEY` environment variable
+4. Deploy!
+
+### **Environment Variables**
+
+- `OPENAI_API_KEY` - Required for AI model access
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 🙏 Acknowledgments
+
+- [Vercel AI SDK](https://sdk.vercel.ai/) for LLM integration
+- [Binance API](https://developers.binance.com/) for cryptocurrency data
+- [Next.js](https://nextjs.org/) for the React framework
+- [OpenAI](https://openai.com/) for the AI models
+
+---
+
+**Built with ❤️ for demonstrating advanced LLM tool integration and real-time cryptocurrency price fetching.**
