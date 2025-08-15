@@ -10,8 +10,11 @@ export default function Page() {
   const [symbol, setSymbol] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, sendMessage, status } = useChat<ChatMessage>({
+  const { messages, sendMessage, status, error } = useChat<ChatMessage>({
     transport: new DefaultChatTransport({ api: '/api/chat/crypto-price' }),
+    onError: (error) => {
+      console.error('Chat error:', error);
+    },
   });
 
   const isLoading = useMemo(() => status === 'submitted' || status === 'streaming', [status]);
@@ -167,6 +170,29 @@ export default function Page() {
                     <div className="size-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                     <div className="size-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     <span className="text-sm">AI is thinking...</span>
+                  </div>
+                )}
+
+                {error && (
+                  <div className="flex justify-start">
+                    <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-red-50 border border-red-200 text-red-800">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-red-500">⚠️</span>
+                        <div>
+                          <div className="font-medium text-sm">Error occurred</div>
+                          <div className="text-sm mt-1">
+                            {error.message === 'Failed to fetch'
+                              ? 'Network error - please check your connection and try again'
+                              : error.message.includes('timeout')
+                              ? 'Request timed out - please try again'
+                              : error.message.includes('500')
+                              ? 'Server error - please try again in a moment'
+                              : 'Something went wrong - please try again'
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
                 
